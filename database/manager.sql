@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 18, 2025 at 05:46 PM
+-- Generation Time: Jun 18, 2025 at 05:44 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.1.25
 
@@ -24,39 +24,45 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user`
+-- Table structure for table `manager`
 --
 
-CREATE TABLE `user` (
-  `username` varchar(30) NOT NULL,
-  `email` varchar(25) NOT NULL,
-  `password` varchar(25) NOT NULL
+CREATE TABLE `manager` (
+  `id` int(11) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `konfirm_password` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `user`
+-- Dumping data for table `manager`
 --
 
-INSERT INTO `user` (`username`, `email`, `password`) VALUES
-('bibel', '', 'jelek'),
-('bibil', '', '12345'),
-('bibila', 'nabilaardelialutfi@gmail.', '12345'),
-('bilcan', 'bilcan@gmail.com', 'jelek'),
-('dede', 'nabilaardelialutfi@gmail.', '$2y$10$S6NFAX9RjVyBUsGBUb'),
-('jeje', '', '1234'),
-('kiki', 'kikiiiii@gmail.com', '123'),
-('nabilap', 'nabilaardelia@gmail.com', '12345'),
-('stecu', 'stecu@gmail.com', '12345');
+INSERT INTO `manager` (`id`, `username`, `email`, `password`, `konfirm_password`) VALUES
+(1, 'hendra', 'hendramanager@gmail.com', '12345678', '12345678');
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `user`
+-- Indexes for table `manager`
 --
-ALTER TABLE `user`
-  ADD PRIMARY KEY (`username`);
+ALTER TABLE `manager`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `username` (`username`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `manager`
+--
+ALTER TABLE `manager`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

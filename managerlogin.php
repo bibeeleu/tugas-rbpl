@@ -121,7 +121,7 @@
       <img src="img/logo jelita.png" alt="Logo Jelita Travel">
     </div>
     <h2>Login</h2>
-    <form action="proseslogin.php" method="post">
+    <form action="managerproseslogin.php" method="post">
       <?php
       session_start();
 
@@ -143,7 +143,7 @@
 
       <input type="submit" value="Login">
     </form>
-    <p>Belum punya akun? <br><a href="registrasi.php">Buat akun</a></p>
+    <p>Belum punya akun? <br><a href="managerregistrasi.php">Buat akun</a></p>
   </div>
 
 </body>

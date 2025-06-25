@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 18, 2025 at 05:46 PM
+-- Generation Time: Jun 18, 2025 at 05:44 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.1.25
 
@@ -24,38 +24,31 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user`
+-- Table structure for table `admin`
 --
 
-CREATE TABLE `user` (
+CREATE TABLE `admin` (
   `username` varchar(30) NOT NULL,
-  `email` varchar(25) NOT NULL,
-  `password` varchar(25) NOT NULL
+  `email` varchar(30) NOT NULL,
+  `password` varchar(30) NOT NULL,
+  `konfirm_password` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `user`
+-- Dumping data for table `admin`
 --
 
-INSERT INTO `user` (`username`, `email`, `password`) VALUES
-('bibel', '', 'jelek'),
-('bibil', '', '12345'),
-('bibila', 'nabilaardelialutfi@gmail.', '12345'),
-('bilcan', 'bilcan@gmail.com', 'jelek'),
-('dede', 'nabilaardelialutfi@gmail.', '$2y$10$S6NFAX9RjVyBUsGBUb'),
-('jeje', '', '1234'),
-('kiki', 'kikiiiii@gmail.com', '123'),
-('nabilap', 'nabilaardelia@gmail.com', '12345'),
-('stecu', 'stecu@gmail.com', '12345');
+INSERT INTO `admin` (`username`, `email`, `password`, `konfirm_password`) VALUES
+('adminjelita', 'jelitadmin@gmail.com', '12345678', '');
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `user`
+-- Indexes for table `admin`
 --
-ALTER TABLE `user`
+ALTER TABLE `admin`
   ADD PRIMARY KEY (`username`);
 COMMIT;
 

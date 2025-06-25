@@ -1,8 +1,34 @@
+<?php
+include 'koneksi.php';
+
+// Validasi ID jadwal
+if (!isset($_GET['id'])) {
+    echo "ID jadwal tidak ditemukan!";
+    exit;
+}
+$id_jadwal = (int)$_GET['id'];
+
+// Ambil data jadwal
+$q_total = mysqli_query($connect, "SELECT * FROM jadwal WHERE id = $id_jadwal");
+if (mysqli_num_rows($q_total) == 0) {
+    echo "Jadwal tidak ditemukan!";
+    exit;
+}
+$data_jadwal = mysqli_fetch_assoc($q_total);
+$total_kursi = (int)$data_jadwal['kursi']; // misal: 8
+
+// Ambil kursi yang sudah dipesan
+$q_terpesan = mysqli_query($connect, "SELECT no_kursi FROM kursi_terpesan WHERE id_jadwal = $id_jadwal");
+$kursi_terpesan = [];
+while ($row = mysqli_fetch_assoc($q_terpesan)) {
+    $kursi_terpesan[] = (int)$row['no_kursi'];
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Seat Selection - Jelita Travel</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
@@ -21,101 +47,30 @@
       text-align: center;
       font-size: 28px;
       font-weight: bold;
-      position: relative;
     }
-
-    .menu-toggle {
-      width: 30px;
-      height: 25px;
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      cursor: pointer;
-      z-index: 101;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .menu-toggle div {
-      width: 100%;
-      height: 4px;
-      background-color: white;
-      transition: 0.4s;
-      border-radius: 2px;
-    }
-
-    .menu-toggle.open .bar1 {
-      transform: rotate(-45deg) translate(-5px, 6px);
-    }
-
-    .menu-toggle.open .bar2 {
-      opacity: 0;
-    }
-
-    .menu-toggle.open .bar3 {
-      transform: rotate(45deg) translate(-5px, -6px);
-    }
-
+ .menu-toggle { width: 30px; height: 25px; position: absolute; top: 20px; left: 20px; cursor: pointer; z-index: 101; display: flex; flex-direction: column; justify-content: space-between; }
+    .menu-toggle div { width: 100%; height: 4px; background-color: white; transition: 0.4s; border-radius: 2px; }
+    .menu-toggle.open .bar1 { transform: rotate(-45deg) translate(-5px, 6px); }
+    .menu-toggle.open .bar2 { opacity: 0; }
+    .menu-toggle.open .bar3 { transform: rotate(45deg) translate(-5px, -6px); }
     .nav-menu {
-      max-height: 0;
-      overflow: hidden;
-      position: absolute;
-      top: 65px;
-      left: 20px;
-      background-color: white;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-      border-radius: 8px;
-      transition: max-height 0.3s ease;
-      width: 180px;
-      z-index: 100;
+      max-height: 0; overflow: hidden; position: absolute; top: 65px; left: 20px; background-color: white;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1); border-radius: 8px; transition: max-height 0.3s ease; width: 180px; z-index: 100;
     }
-
-    .nav-menu.active {
-      max-height: 300px;
-      padding: 10px 0;
-    }
-
+    .nav-menu.active { max-height: 300px; padding: 10px 0; }
     .nav-menu a {
-      display: block;
-      padding: 10px 18px;
-      text-decoration: none;
-      color: #333;
-      font-size: 14px;
-      font-weight: 500;
-      border-bottom: 1px solid #eee;
+      display: block; padding: 10px 18px; text-decoration: none; color: #333; font-size: 14px; font-weight: 500; border-bottom: 1px solid #eee;
     }
-
-    .nav-menu a.no-border {
-      border-bottom: none;
-    }
-
-    .menu-icon {
-      vertical-align: middle;
-      margin-right: 8px;
-    }
-
+    .nav-menu a.no-border { border-bottom: none; }
     .nav-tabs {
-      display: flex;
-      justify-content: center;
-      background-color: #e7ecf3;
-      padding: 10px;
+      display: flex; justify-content: center; background: #e7ecf3; padding: 10px;
     }
-
     .nav-tabs a {
-      text-decoration: none;
-      color: #3C5B8B;
-      font-weight: 600;
-      margin: 0 10px;
-      padding: 10px;
-      border-bottom: 3px solid transparent;
+      padding: 10px 20px; text-decoration: none; color: #3C5B8B; font-weight: 600; border-bottom: 3px solid transparent; margin: 0 10px;
     }
-
     .nav-tabs a.active {
-      border-color: #e86f6f;
-      color: #e86f6f;
+      border-bottom: 3px solid #e86f6f; color: #e86f6f;
     }
-
     .main-content {
       max-width: 600px;
       margin: 30px auto;
@@ -151,9 +106,10 @@
 
     .seat-grid {
       display: grid;
-      grid-template-columns: 60px 60px 30px 60px;
+      grid-template-columns: 60px 60px 40px 60px;
+      grid-auto-rows: 60px;
       justify-content: center;
-      gap: 15px;
+      gap: 10px;
       margin-bottom: 25px;
     }
 
@@ -185,7 +141,7 @@
       background-color: #e86f6f;
       color: white;
       padding: 12px 20px;
-      margin: 70px;
+      margin-top: 30px;
       border: none;
       border-radius: 10px;
       font-size: 16px;
@@ -205,131 +161,120 @@
   </style>
 </head>
 <body>
+<header>
+  <div class="menu-toggle" onclick="toggleMenu(this)">
+    <div class="bar1"></div>
+    <div class="bar2"></div>
+    <div class="bar3"></div>
+  </div>
+  JELITA Travel
+  <div class="nav-menu" id="navMenu">
+    <a href="home.php"><img src="https://img.icons8.com/ios-filled/20/000000/home.png" /> Home</a>
+    <a href="tiket.php"><img src="https://img.icons8.com/ios-filled/20/000000/ticket.png" /> Ticket</a>
+    <a href="login.php" class="no-border"><img src="https://img.icons8.com/ios-filled/20/000000/user.png" /> Login</a>
+  </div>
+</header>
 
-  <header>
-    <div class="menu-toggle" onclick="toggleMenu(this)">
-      <div class="bar1"></div>
-      <div class="bar2"></div>
-      <div class="bar3"></div>
+<nav class="nav-tabs">
+  <a href="#">Time</a>
+  <a href="#" class="active">Seat</a>
+  <a href="#">Passenger</a>
+  <a href="#">Payment</a>
+</nav>
+<main class="main-content">
+  <div class="seat-info">
+    <h3>Pilih Kursi Anda</h3>
+
+    <div class="legend">
+      <div><div class="box" style="background-color:#d9534f"></div>Sold</div>
+      <div><div class="box" style="background-color:#5bc0de"></div>Available</div>
+      <div><div class="box" style="background-color:#f0ad4e"></div>Selected</div>
     </div>
-    JELITA Travel
 
-    <div class="nav-menu" id="navMenu">
-      <a href="home.php">
-        <img src="https://img.icons8.com/ios-filled/20/000000/home.png" class="menu-icon" alt="home"> Home
-      </a>
-      <a href="tiket.php">
-        <img src="https://img.icons8.com/ios-filled/20/000000/ticket.png" class="menu-icon" alt="ticket"> Ticket
-      </a>
-      <a href="login.php" class="no-border">
-        <img src="https://img.icons8.com/ios-filled/20/000000/user.png" class="menu-icon" alt="login"> Login
-      </a>
-    </div>
-  </header>
-
-  <nav class="nav-tabs">
-    <a href="time.php">Time</a>
-    <a href="#" class="active">Seat</a>
-    <a href="#">Passenger</a>
-    <a href="#">Payment</a>
-  </nav>
-
-  <main class="main-content">
-    <div class="seat-info">
-      <h3>Pick Your Seat</h3>
-
-      <div class="legend">
-        <div><div class="box" style="background-color:#d9534f"></div>Sold</div>
-        <div><div class="box" style="background-color:#5bc0de"></div>Available</div>
-        <div><div class="box" style="background-color:#f0ad4e"></div>Your Pick</div>
-      </div>
-
+    <form action="booking.php" method="GET">
+      <input type="hidden" name="id_jadwal" value="<?= $id_jadwal ?>">
       <div class="seat-grid" id="seatGrid"></div>
 
       <div class="seat-output">
-        Your seats: <span id="selectedSeats">9 👵 10 👵</span>
+        Kursi yang dipilih: <span id="selectedSeats">None</span>
+        <input type="hidden" name="selected" id="selectedInput">
       </div>
 
-      <a href="booking.php" class="btn-next">Passenger Details</a>
-    </div>
-  </main>
+      <button type="submit" class="btn-next">Lanjut ke Penumpang</button>
+    </form>
+  </div>
+</main>
 
-  <footer>
-    &copy; 2025 Jelita Travel. All rights reserved.
-  </footer>
+<footer>
+  &copy; 2025 Jelita Travel. All rights reserved.
+</footer>
 
-  <script>
-    function toggleMenu(btn) {
-      btn.classList.toggle("open");
-      document.getElementById("navMenu").classList.toggle("active");
+<script>
+  const seatGrid = document.getElementById('seatGrid');
+  const selectedSeatsSpan = document.getElementById('selectedSeats');
+  const selectedInput = document.getElementById('selectedInput');
+
+  const kursiTerpesan = <?= json_encode($kursi_terpesan) ?>;
+  const totalKursiTersedia = <?= $total_kursi ?>;
+  const selected = [];
+
+  // Kursi layout tetap 10 seat dengan formasi bus
+  const layout = [
+    1, 2, null, 3,
+    4, 5, null, 6,
+    7, 8, null, 9,
+    null, null, null, 10
+  ];
+
+  layout.forEach(no => {
+    const div = document.createElement('div');
+
+    if (no === null) {
+      div.style.visibility = 'hidden';
+    } else {
+      div.className = 'seat';
+      div.innerText = no;
+
+      // Kursi di luar jangkauan total kursi = dianggap tidak tersedia
+      const melebihiKapasitas = no > totalKursiTersedia;
+
+      if (kursiTerpesan.includes(no) || melebihiKapasitas) {
+        div.classList.add('sold');
+      } else {
+        div.classList.add('available');
+        div.addEventListener('click', () => {
+          if (div.classList.contains('selected')) {
+            div.classList.remove('selected');
+            div.classList.add('available');
+            selected.splice(selected.indexOf(no), 1);
+          } else {
+            div.classList.remove('available');
+            div.classList.add('selected');
+            selected.push(no);
+          }
+          selectedSeatsSpan.textContent = selected.join(', ') || 'None';
+          selectedInput.value = selected.join(',');
+        });
+      }
     }
 
-    document.addEventListener("click", function (event) {
-      const menu = document.getElementById("navMenu");
-      const toggle = document.querySelector(".menu-toggle");
+    seatGrid.appendChild(div);
+  });
+</script>
+<script>
+  function toggleMenu(btn) {
+    btn.classList.toggle("open");
+    document.getElementById("navMenu").classList.toggle("active");
+  }
 
-      if (!menu.contains(event.target) && !toggle.contains(event.target)) {
-        menu.classList.remove("active");
-        toggle.classList.remove("open");
-      }
-    });
-
-    // Seat Selection Logic
-    const seatGrid = document.getElementById('seatGrid');
-    const selectedSeatsSpan = document.getElementById('selectedSeats');
-
-    const seatMap = [
-      1, 2, null, 3,
-      4, 5, null, 6,
-      7, 8, null, 9,
-      null, null, null, 10
-    ];
-
-    const seatStatus = {
-      1: 'available',
-      2: 'available',
-      3: 'sold',
-      4: 'sold',
-      5: 'available',
-      6: 'sold',
-      7: 'available',
-      8: 'sold',
-      9: 'selected',
-      10: 'selected'
-    };
-
-    const selected = [];
-
-    seatMap.forEach((num) => {
-      const seatDiv = document.createElement('div');
-      if (num === null) {
-        seatDiv.style.visibility = 'hidden';
-      } else {
-        const status = seatStatus[num] || 'available';
-        seatDiv.className = 'seat ' + status;
-        seatDiv.innerText = num;
-
-        if (status !== 'sold') {
-          seatDiv.addEventListener('click', () => {
-            if (seatDiv.classList.contains('selected')) {
-              seatDiv.classList.remove('selected');
-              seatDiv.classList.add('available');
-              selected.splice(selected.indexOf(num), 1);
-            } else {
-              seatDiv.classList.remove('available');
-              seatDiv.classList.add('selected');
-              selected.push(num);
-            }
-            selectedSeatsSpan.textContent = selected.join(', ') || 'None';
-          });
-        }
-
-        if (status === 'selected') {
-          selected.push(num);
-        }
-      }
-      seatGrid.appendChild(seatDiv);
-    });
-  </script>
+  document.addEventListener("click", function (event) {
+    const menu = document.getElementById("navMenu");
+    const toggle = document.querySelector(".menu-toggle");
+    if (!menu.contains(event.target) && !toggle.contains(event.target)) {
+      menu.classList.remove("active");
+      toggle.classList.remove("open");
+    }
+  });
+</script>
 </body>
 </html>

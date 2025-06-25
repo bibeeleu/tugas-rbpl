@@ -87,7 +87,6 @@
       color: #333;
       border-bottom: 1px solid #eee;
       font-size: 14px;
-      letter-spacing: 1px;
       font-weight: 500;
     }
 
@@ -98,20 +97,35 @@
     .hero-section {
       padding: 60px 20px;
       text-align: center;
-      background: linear-gradient(to right, #fefefe, #f0f4ff);
+      background-image: url('img/pantai.jpg');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      animation: moveBg 20s linear infinite;
+      color: #333;
+    }
+
+    @keyframes moveBg {
+      0% {
+        background-position: 0% 50%;
+      }
+      100% {
+        background-position: 100% 50%;
+      }
     }
 
     .hero-section h1 {
       font-size: 36px;
       margin-bottom: 20px;
-      color: #3C5B8B;
+      color:rgb(157, 175, 202);
     }
 
     .hero-section p {
       font-size: 18px;
-      color: #555;
+      color: #fff;
       max-width: 700px;
       margin: 0 auto 30px;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.5);
     }
 
     .hero-section img {
@@ -120,6 +134,7 @@
       border-radius: 12px;
       margin-top: 20px;
       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
     }
 
     .container {
@@ -226,6 +241,59 @@
         flex-direction: column;
       }
     }
+
+    .services {
+      padding: 50px 20px;
+      background-color:rgb(191, 203, 225);
+    }
+
+    .services .box-services {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 30px;
+    }
+
+    .box {
+      flex: 1 1 calc(33.333% - 20px);
+      background-color: #ffffff;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      cursor: pointer;
+    }
+
+    .box:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    .box img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+
+    .box h4 {
+      margin-bottom: 10px;
+      color: #3C5B8B;
+    }
+
+    .box p {
+      font-size: 15px;
+      color: #555;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 768px) {
+      .box {
+        flex: 1 1 100%;
+      }
+    }
   </style>
 </head>
 <body>
@@ -237,15 +305,9 @@
     </div>
     JELITA Travel
     <div class="nav-menu" id="navMenu">
-      <a href="home.php">
-        <img src="https://img.icons8.com/ios-filled/20/000000/home.png" alt="Home Icon" class="menu-icon"> Home
-      </a>
-      <a href="tiket.php">
-        <img src="https://img.icons8.com/ios-filled/20/000000/ticket.png" alt="Ticket Icon" class="menu-icon"> Ticket
-      </a>
-      <a href="login.php" class="no-border">
-        <img src="https://img.icons8.com/ios-filled/20/000000/user.png" alt="Login Icon" class="menu-icon"> Login
-      </a>
+      <a href="home.php"><img src="https://img.icons8.com/ios-filled/20/000000/home.png" alt="Home Icon" class="menu-icon"> Home</a>
+      <a href="tiket.php"><img src="https://img.icons8.com/ios-filled/20/000000/ticket.png" alt="Ticket Icon" class="menu-icon"> Ticket</a>
+      <a href="login.php" class="no-border"><img src="https://img.icons8.com/ios-filled/20/000000/user.png" alt="Login Icon" class="menu-icon"> Login</a>
     </div>
   </header>
 
@@ -255,50 +317,67 @@
       Jelita Travel adalah layanan transportasi terpercaya untuk perjalanan antar kota Anda. 
       Dengan armada nyaman dan jadwal fleksibel, kami siap mengantar Anda dari Yogyakarta ke Semarang (dan sebaliknya) dengan aman dan tepat waktu.
     </p>
-    <img src="img/background.png" alt="Travel Image">
+    <img src="img/background.jpg" alt="Travel Image" onclick="window.open(this.src, '_blank')" />
   </section>
+
+  <div class="services" id="services">
+    <div class="container">
+      <div class="box-services">
+        <div class="box" onclick="boxClicked('harga')">
+          <img src="img/penumpang.jpg" alt="Harga Terjangkau">
+          <h4>Harga Terjangkau</h4>
+          <p>Nikmati perjalanan nyaman dan hemat biaya.</p>
+        </div>
+        <div class="box" onclick="boxClicked('sertifikasi')">
+          <img src="img/bus.jpg" alt="Tersertifikasi">
+          <h4>Sudah Tersertifikasi</h4>
+          <p>Kami bekerjasama dengan operator resmi dan berizin.</p>
+        </div>
+        <div class="box" onclick="boxClicked('aman')">
+          <img src="img/supir.jpg" alt="Aman dan Ramah">
+          <h4>Aman dan Ramah</h4>
+          <p>Utamakan keselamatan dan kenyamanan penumpang.</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div class="container">
     <div class="balance-bar">
       <div><img src="https://img.icons8.com/color/48/000000/google-pay-india.png" width="20" alt="Google Pay"/> Rp 500.000</div>
       <div><img src="https://img.icons8.com/fluency/48/star.png" width="20" alt="Star"/> Your Point 400 point</div>
     </div>
-
     <form action="time.php" method="get">
       <div class="form-inline">
         <div class="form-group" style="flex:1">
           <label for="from">From</label>
           <select id="from" name="from">
-            <option value="smg_ungaran">Semarang Ungaran (SMG)</option>
-            <option value="smg_srondol">Semarang Srondol (SMG)</option>
-            <option value="yk_seturan">Yogyakarta Seturan (YK)</option>
-            <option value="yk_jombor">Yogyakarta Jombor (YK)</option>
+                <option value="Semarang Ungaran (SMG)">Semarang Ungaran (SMG)</option>
+                <option value="Semarang Srondol (SMG)">Semarang Srondol (SMG)</option>
+                <option value="Yogyakarta Seturan (YK)">Yogyakarta Seturan (YK)</option>
+                <option value="Yogyakarta Jombor (YK)">Yogyakarta Jombor (YK)</option>
           </select>
         </div>
-
         <div class="form-group" style="flex:1">
           <label for="to">To</label>
           <select id="to" name="to">
-            <option value="smg_ungaran">Semarang Ungaran (SMG)</option>
-            <option value="smg_srondol">Semarang Srondol (SMG)</option>
-            <option value="yk_seturan">Yogyakarta Seturan (YK)</option>
-            <option value="yk_jombor">Yogyakarta Jombor (YK)</option>
+                <option value="Semarang Ungaran (SMG)">Semarang Ungaran (SMG)</option>
+                <option value="Semarang Srondol (SMG)">Semarang Srondol (SMG)</option>
+                <option value="Yogyakarta Seturan (YK)">Yogyakarta Seturan (YK)</option>
+                <option value="Yogyakarta Jombor (YK)">Yogyakarta Jombor (YK)</option>
           </select>
         </div>
       </div>
-
       <div class="form-inline">
         <div class="form-group" style="flex:1">
           <label for="date">Date</label>
           <input type="date" id="date" name="date" value="2025-01-07">
         </div>
-
         <div class="form-group" style="flex:1">
           <label for="passenger">Passenger</label>
           <input type="number" id="passenger" name="passenger" min="1" value="2">
         </div>
       </div>
-
       <center>
         <button type="submit" class="btn-primary">Temukan Jadwal</button>
       </center>
@@ -310,11 +389,12 @@
       <div class="info-box">Promo & Loyalty</div>
     </div>
   </div>
-
+   <br><br>
   <footer>
     &copy; 2025 Jelita Travel. All rights reserved.
+    <br><br>
   </footer>
-<br> <br>
+
   <script>
     function toggleMenu(element) {
       const menu = document.getElementById("navMenu");
@@ -331,6 +411,22 @@
         toggle.classList.remove("open");
       }
     });
+
+    function boxClicked(id) {
+      switch(id) {
+        case 'harga':
+          alert("Info: Paket hemat mulai Rp 85.000!");
+          break;
+        case 'sertifikasi':
+          alert("Info: Operator travel kami telah bersertifikat resmi.");
+          break;
+        case 'aman':
+          alert("Info: Protokol keselamatan ketat selama perjalanan.");
+          break;
+        default:
+          console.log("Box clicked.");
+      }
+    }
   </script>
 </body>
 </html>

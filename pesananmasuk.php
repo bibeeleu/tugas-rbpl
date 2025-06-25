@@ -33,97 +33,66 @@ if ($result) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Jelita Travel - Tiket Saya</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Inter', sans-serif;
-    }
+    <meta charset="UTF-8">
+    <title>Admin Jadwal - Jelita Travel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #c2cbdb;
+            margin: 0;
+            padding: 0;
+        }
 
-    body {
-      background-color: #eef1f5;
-      color: #333;
-    }
+        .header {
+            background-color: #4b6aa1;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .nav-menu {
+    display: flex;
+    justify-content: center;
+    background-color: #9cacc4;
+    padding: 10px 0;
+    gap: 30px;
+    border-bottom: 2px solid #4b6aa1;
+}
 
-    header {
-      background-color: #3C5B8B;
-      color: white;
-      padding: 20px;
-      text-align: center;
-      font-size: 28px;
-      font-weight: bold;
-    }
+.nav-item {
+    font-size: 14px;
+    color: #0a3183;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    transition: background-color 0.3s ease;
+    position: relative;
+}
 
-    .menu-toggle {
-      width: 30px;
-      height: 25px;
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      cursor: pointer;
-      z-index: 101;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
+.nav-item::after {
+    content: '';
+    display: block;
+    width: 80%;
+    height: 2px;
+    background: #0a3183;
+    margin: 4px auto 0 auto;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
 
-    .menu-toggle div {
-      width: 100%;
-      height: 4px;
-      background-color: white;
-      transition: 0.4s;
-      border-radius: 2px;
-    }
+.nav-item:hover::after {
+    opacity: 1;
+}
 
-    .menu-toggle.open .bar1 {
-      transform: rotate(-45deg) translate(-5px, 6px);
-    }
+.nav-item.active {
+    background-color: #e47070;
+    color: white;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
 
-    .menu-toggle.open .bar2 {
-      opacity: 0;
-    }
+.nav-item.active::after {
+    opacity: 0;
+}
 
-    .menu-toggle.open .bar3 {
-      transform: rotate(45deg) translate(-5px, -6px);
-    }
-
-    .nav-menu {
-      max-height: 0;
-      overflow: hidden;
-      position: absolute;
-      top: 65px;
-      left: 20px;
-      background-color: white;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-      border-radius: 8px;
-      transition: max-height 0.3s ease;
-      width: 180px;
-      z-index: 100;
-    }
-
-    .nav-menu.active {
-      max-height: 300px;
-      padding: 10px 0;
-    }
-
-    .nav-menu a {
-      display: block;
-      padding: 10px 18px;
-      text-decoration: none;
-      color: #333;
-      border-bottom: 1px solid #eee;
-      font-size: 14px;
-      font-weight: 500;
-    }
-
-    .nav-menu a:hover {
-      background-color: #f1f1f1;
-    }
 
     .container {
       max-width: 900px;
@@ -203,15 +172,29 @@ if ($result) {
       background-color: #eb5757;
       color: white;
     }
-.barcode {
-  margin-top: 1px;
-  text-align: right;
-
+.ticket-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
 }
 
-.barcode img {
-  height: 60px;
+.btn-status {
+  background-color: #eb5757;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
+
+.btn-status.success {
+  background-color: #6fcf97;
+}
+
 
     .error {
       color: red;
@@ -225,25 +208,21 @@ if ($result) {
       color: #aaa;
       font-size: 14px;
     }
-  </style>
-</head>
-<body>
-  <header>
-    <div class="menu-toggle" onclick="toggleMenu(this)">
-      <div class="bar1"></div>
-      <div class="bar2"></div>
-      <div class="bar3"></div>
-    </div>
-    JELITA Travel
-    <div class="nav-menu" id="navMenu">
-      <a href="home.php"><img src="https://img.icons8.com/ios-filled/20/000000/home.png"/> Home</a>
-      <a href="tiket.php"><img src="https://img.icons8.com/ios-filled/20/000000/ticket.png"/> Ticket</a>
-      <a href="login.php"><img src="https://img.icons8.com/ios-filled/20/000000/user.png"/> Login</a>
-    </div>
-  </header>
+    .barcode img {
+  height: 60px;
+  width: auto;
+}
 
+  </style>
+<div class="header">
+    <h2>JELITA Travel - Admin</h2>
+</div>
+<div class="nav-menu">
+    <a href="admin.php" class="nav-item">Jadwal Keberangkatan</a>
+    <a href="pesananmasuk.php" class="nav-item active">Pemesanan</a>
+</div>
   <div class="container">
-    <h3>Your Tickets</h3>
+    <h3>Pesanan Berhasil</h3>
     <div class="ticket-box">
       <?php if (!empty($pesan_error)): ?>
         <p class="error"><?= $pesan_error ?></p>
@@ -263,25 +242,28 @@ if ($result) {
           <div class="user-info">
             <?= $row['first_name'] ?> <?= $row['last_name'] ?> | NIK: <?= $row['nik'] ?> | <?= $row['email'] ?> | <?= $row['phone'] ?>
           </div>
-          <div class="barcode">
-          <img src="https://barcode.tec-it.com/barcode.ashx?data=<?= urlencode($row['nik']) ?>&code=Code128&dpi=96" alt="Barcode Tiket" />
-          </div>
+          <div class="ticket-actions">
+  <div class="barcode">
+    <img src="https://barcode.tec-it.com/barcode.ashx?data=<?= urlencode($row['nik']) ?>&code=Code128&dpi=96" alt="Barcode Tiket" />
+  </div>
+  <button class="btn-status" onclick="toggleStatus(this)">Konfirmasi</button>
+</div>
           <hr style="margin: 15px 0;">
         <?php endforeach; ?>
       <?php else: ?>
         <p>Tidak ada data tiket yang ditemukan.</p>
       <?php endif; ?>
+    <script>
+  function toggleStatus(button) {
+    button.classList.toggle('success');
+    if (button.classList.contains('success')) {
+      button.innerText = 'Berhasil';
+    } else {
+      button.innerText = 'Konfirmasi';
+    }
+  }
+</script>
     </div>
   </div>
-
-  <script>
-    function toggleMenu(element) {
-      element.classList.toggle('open');
-      document.getElementById('navMenu').classList.toggle('active');
-    }
-  </script>
-  <footer>
-    &copy; 2025 Jelita Travel. All rights reserved.
-  </footer>
 </body>
 </html>

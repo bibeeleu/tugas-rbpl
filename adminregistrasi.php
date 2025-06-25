@@ -116,7 +116,7 @@
       <img src="img/logo jelita.png" alt="Logo Jelita Travel" />
     </div>
     <h2>Create Account</h2>
-    <form action="prosesregistrasi.php" method="post">
+    <form action="adminprosesregistrasi.php" method="post">
       <label for="username">Username:</label>
       <input type="text" id="username" name="username" placeholder="Masukkan username baru anda" required />
 
@@ -131,7 +131,7 @@
 
       <input type="submit" value="Sign Up" />
     </form>
-    <p>Sudah memiliki akun? <br /><a href="login.php">Login Akun</a></p>
+    <p>Sudah memiliki akun? <br /><a href="adminlogin.php">Login Akun</a></p>
   </div>
 </body>
 </html>

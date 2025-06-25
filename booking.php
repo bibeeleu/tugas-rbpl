@@ -1,3 +1,20 @@
+<?php
+include 'koneksi.php';
+
+$id_jadwal = isset($_GET['id_jadwal']) ? (int)$_GET['id_jadwal'] : 0;
+$kursi_terpilih = isset($_GET['selected']) ? explode(',', $_GET['selected']) : [];
+
+if ($id_jadwal && !empty($kursi_terpilih)) {
+    foreach ($kursi_terpilih as $no_kursi) {
+        $no_kursi = (int)$no_kursi;
+        $cek = mysqli_query($connect, "SELECT * FROM kursi_terpesan WHERE id_jadwal = $id_jadwal AND no_kursi = $no_kursi");
+        if (mysqli_num_rows($cek) == 0) {
+            mysqli_query($connect, "INSERT INTO kursi_terpesan (id_jadwal, no_kursi) VALUES ($id_jadwal, $no_kursi)");
+        }
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -121,50 +138,36 @@
     <h1>JELITA Travel</h1>
   </header>
 
-  <!-- Navigation -->
   <nav class="nav-tabs">
     <a href="time.php">Time</a>
-    <a href="seat.php">Seat</a>
+    <a href="seat.php?id=<?= $id_jadwal ?>">Seat</a>
     <a href="#" class="active">Passenger</a>
-    <a href="payment.html">Payment</a> <!-- Payment page link -->
+    <a href="payment.php">Payment</a>
   </nav>
 
-  <!-- Main content -->
   <main class="main-content">
-    <!-- Passenger 1 -->
-    <section class="passenger-card">
-      <h2>Passenger No 1</h2>
-      <p class="subtitle">New Passenger</p>
-      <form class="form-group">
-        <input type="text" id="first-name" placeholder="First Name" required />
-        <input type="text" id="last-name" placeholder="Last Name" required />
-        <input type="text" id="nik" placeholder="NIK" required />
-        <input type="email" id="email" placeholder="Email" required />
-        <input type="text" id="phone" placeholder="No. Handphone" required />
-        <button type="button" class="btn-save" onclick="savePassengerData()">+ Save This Passenger</button>
-      </form>
-    </section>
-
-    <!-- Passenger 2 (optional) -->
-    <section class="passenger-card">
-      <h2>Passenger No 2</h2>
-      <p class="subtitle">New Passenger</p>
-      <form class="form-group">
-        <input type="text" id="first-name2" placeholder="First Name" required />
-        <input type="text" id="last-name2" placeholder="Last Name" required />
-        <input type="text" id="nik2" placeholder="NIK" required />
-        <input type="email" id="email2" placeholder="Email" required />
-        <input type="text" id="phone2" placeholder="No. Handphone" required />
-        <button type="button" class="btn-save" onclick="savePassengerData2()">+ Save This Passenger</button>
-      </form>
-    </section>
-
-    <div class="action-center">
-  <a href="payment.php">
-    <button class="btn-payment">Proceed to Payment</button>
-  </a>
-</div>
-
+    <form action="proses_booking.php" method="POST" id="mainForm">
+      <input type="hidden" name="id_jadwal" value="<?= $id_jadwal ?>">
+      <div id="passenger-container">
+        <?php foreach ($kursi_terpilih as $index => $no_kursi): ?>
+        <section class="passenger-card">
+          <h2>Passenger No <?= $index + 1 ?></h2>
+          <p class="subtitle">New Passenger (Kursi No <?= $no_kursi ?>)</p>
+          <input type="hidden" name="no_kursi[]" value="<?= $no_kursi ?>">
+          <div class="form-group">
+            <input type="text" name="first_name[]" placeholder="First Name" required />
+            <input type="text" name="last_name[]" placeholder="Last Name" required />
+            <input type="text" name="nik[]" placeholder="NIK" required />
+            <input type="email" name="email[]" placeholder="Email" required />
+            <input type="text" name="phone[]" placeholder="No. Handphone" required />
+          </div>
+        </section>
+        <?php endforeach; ?>
+      </div>
+      <div class="action-center">
+        <button class="btn-payment" type="submit">Proceed to Payment</button>
+      </div>
+    </form>
   </main>
 
   <footer class="footer">
@@ -172,35 +175,29 @@
   </footer>
 
   <script>
-    function savePassengerData() {
-      // Save passenger 1 data to localStorage
-      const passenger1 = {
-        firstName: document.getElementById('first-name').value,
-        lastName: document.getElementById('last-name').value,
-        nik: document.getElementById('nik').value,
-        email: document.getElementById('email').value,
-        phone: document.getElementById('phone').value
-      };
-      localStorage.setItem('passenger1', JSON.stringify(passenger1));
-      alert('Passenger 1 Saved!');
-    }
+    let passengerCount = <?= count($kursi_terpilih) ?>;
 
-    function savePassengerData2() {
-      // Save passenger 2 data to localStorage (optional)
-      const passenger2 = {
-        firstName: document.getElementById('first-name2').value,
-        lastName: document.getElementById('last-name2').value,
-        nik: document.getElementById('nik2').value,
-        email: document.getElementById('email2').value,
-        phone: document.getElementById('phone2').value
-      };
-      localStorage.setItem('passenger2', JSON.stringify(passenger2));
-      alert('Passenger 2 Saved!');
-    }
+    function addPassenger() {
+      passengerCount++;
+      const container = document.getElementById('passenger-container');
 
-    function goToPayment() {
-      // When moving to the payment page, we can pass the data
-      window.location.href = 'payment.html'; // Ensure payment.html is ready to retrieve data
+      const section = document.createElement('section');
+      section.classList.add('passenger-card');
+
+      section.innerHTML = `
+        <h2>Passenger No ${passengerCount}</h2>
+        <p class="subtitle">New Passenger</p>
+        <input type="hidden" name="no_kursi[]" value="0">
+        <div class="form-group">
+          <input type="text" name="first_name[]" placeholder="First Name" required />
+          <input type="text" name="last_name[]" placeholder="Last Name" required />
+          <input type="text" name="nik[]" placeholder="NIK" required />
+          <input type="email" name="email[]" placeholder="Email" required />
+          <input type="text" name="phone[]" placeholder="No. Handphone" required />
+        </div>
+      `;
+
+      container.appendChild(section);
     }
   </script>
 </body>
